@@ -1,4 +1,4 @@
-# Java Challenge
+# 10 Pin Bowling Scoring
 
 This is the implementation of a command-line Java scoring program for 10 Pin Bowling. You can check out the rules of the
 game [here](https://en.wikipedia.org/wiki/Ten-pin_bowling#Rules_of_play)
