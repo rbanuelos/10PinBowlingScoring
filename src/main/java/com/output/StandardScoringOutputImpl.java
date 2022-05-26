@@ -40,7 +40,8 @@ public class StandardScoringOutputImpl extends ScoringOutput {
 
   private void displayPinFalls() {
     System.out.print("Pinfalls" + DOUBLE_SEPARATOR_CHARACTER);
-    String firstBall, secondBall;
+    String firstBall;
+    String secondBall;
     for (Frame frame : this.game.getFrames()) {
       if (frame.isStrike()) {
         if (!frame.isLastFrame()) {

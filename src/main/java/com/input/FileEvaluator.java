@@ -4,7 +4,6 @@ import com.exception.TenPinBowlingException;
 import com.game.Roll;
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -62,7 +61,8 @@ public class FileEvaluator {
     for (AbstractMap.SimpleEntry<String, Integer> entry : rollEntries) {
       Roll roll = findRollForPlayer(entry.getKey(), rolls);
       if (roll == null) {
-        rolls.add(new Roll(entry.getKey(), new ArrayList<>(Collections.singletonList(entry.getValue()))));
+        rolls.add(
+            new Roll(entry.getKey(), new ArrayList<>(Collections.singletonList(entry.getValue()))));
       } else {
         roll.getRolls().add(entry.getValue());
       }
