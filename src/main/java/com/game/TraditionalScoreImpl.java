@@ -32,7 +32,7 @@ public class TraditionalScoreImpl implements Score {
         frameScore = this.game.getFrames().get(currentFrame).getKnockedPins();
       }
       frameScoreAcc += frameScore;
-      if (currentFrame < Game.BONUS_FRAME) {
+      if (currentFrame < Game.NUMBER_OF_FRAMES) {
         scores.add(frameScoreAcc);
       }
       currentFrame++;

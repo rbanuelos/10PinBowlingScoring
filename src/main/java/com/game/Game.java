@@ -15,8 +15,7 @@ import java.util.Objects;
  */
 public class Game {
 
-  public static int NUMBER_OF_FRAMES = 9;
-  public static int BONUS_FRAME = NUMBER_OF_FRAMES + 1;
+  public static int NUMBER_OF_FRAMES = 10;
   public static int MAX_SCORE = 300;
 
   private final String player;
@@ -45,39 +44,40 @@ public class Game {
     if (rolls == null || rolls.isEmpty()) {
       throw new TenPinBowlingException.InvalidNumberOfRollsException("Roll list is empty!");
     }
-    for (int rollNumber = 0; rollNumber < rolls.size(); rollNumber++) {
-      if (rollNumber == rolls.size() - 1) {
-        setFrame(rolls.get(rollNumber), 0, false);
+    int rollIndex = 0;
+    while (rollIndex < rolls.size()) {
+      if (rollIndex == rolls.size() - 1) {
+        addFrame(rolls.get(rollIndex), 0, false);
       } else {
-        if (rolls.get(rollNumber).equals(Frame.STRIKE_NUMBER)) {
-          if (this.frames.size() == BONUS_FRAME) {
-            setFrame(rolls.get(rollNumber), rolls.get(rollNumber + 1), true);
-            rollNumber += 1;
+        if (isStrike(rolls.get(rollIndex))) {
+          if (isMaxFrameNumberReached()) {
+            addFrame(rolls.get(rollIndex), rolls.get(rollIndex + 1), true);
+            rollIndex += 1;
           } else {
-            setFrame(rolls.get(rollNumber), 0, false);
+            addFrame(rolls.get(rollIndex), 0, false);
           }
         } else {
-          setFrame(rolls.get(rollNumber), rolls.get(rollNumber + 1), true);
-          rollNumber += 1;
+          addFrame(rolls.get(rollIndex), rolls.get(rollIndex + 1), true);
+          rollIndex += 1;
         }
       }
+      rollIndex++;
     }
 
-    if (this.frames.size() <= NUMBER_OF_FRAMES) {
+    if (this.frames.size() < NUMBER_OF_FRAMES) {
       throw new TenPinBowlingException.InvalidNumberOfRollsException(
           "Not enough Rolls to complete a Game");
     }
 
-    if (this.frames.size() == NUMBER_OF_FRAMES + 1) {
-      Frame lastFrame = this.frames.get(this.frames.size() - 1);
-      if (lastFrame.isStrike() || lastFrame.isSpare()) {
+    if (this.frames.size() == NUMBER_OF_FRAMES) {
+      if (getLastFrame().isStrike() || getLastFrame().isSpare()) {
         throw new TenPinBowlingException.InvalidNumberOfRollsException(
             "No Bonus Rolls for last Strike or Spare");
       }
     }
   }
 
-  public final void setFrame(final Integer ball1, final Integer ball2, final boolean doubleValues)
+  public final void addFrame(final Integer ball1, final Integer ball2, final boolean doubleValues)
       throws TenPinBowlingException.InvalidKnockedPinsCountException,
       TenPinBowlingException.InvalidNumberOfRollsException {
 
@@ -88,11 +88,11 @@ public class Game {
 
     Frame newFrame;
 
-    if (this.frames.size() == BONUS_FRAME + 1) {
+    if (this.frames.size() == NUMBER_OF_FRAMES + 1) {
       throw new TenPinBowlingException.InvalidNumberOfRollsException("Exceeded number of Rolls!");
     }
 
-    if (this.frames.size() == NUMBER_OF_FRAMES + 1 && !Objects.isNull(previousFrame)) {
+    if (isMaxFrameNumberReached() && !Objects.isNull(previousFrame)) {
       if (!(previousFrame.isStrike() && doubleValues) && !previousFrame.isSpare()) {
         throw new TenPinBowlingException.InvalidNumberOfRollsException(
             "Not enough Rolls. Missing 1 bonus roll");
@@ -104,7 +104,7 @@ public class Game {
       newFrame = new Frame(ball1, ball2, true);
     } else {
       newFrame = new Frame(ball1, ball2, false);
-      if (this.frames.size() == NUMBER_OF_FRAMES) {
+      if (this.frames.size() + 1 == NUMBER_OF_FRAMES) {
         if (!newFrame.isStrike() && !doubleValues) {
           throw new TenPinBowlingException.InvalidNumberOfRollsException(
               "Not enough Rolls to complete a Game");
@@ -132,5 +132,17 @@ public class Game {
    */
   public final ArrayList<Frame> getFrames() {
     return this.frames;
+  }
+
+  private boolean isStrike(Integer value) {
+    return value.equals(Frame.STRIKE_NUMBER);
+  }
+
+  private boolean isMaxFrameNumberReached() {
+    return this.frames.size() == NUMBER_OF_FRAMES;
+  }
+
+  private Frame getLastFrame() {
+    return this.frames.get(frames.size() - 1);
   }
 }

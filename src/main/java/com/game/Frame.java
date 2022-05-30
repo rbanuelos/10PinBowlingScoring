@@ -6,8 +6,7 @@ import com.exception.TenPinBowlingException;
 /**
  * Class that represent a Frame.
  * It has information about Bowling balls 1 and 2. In addition, has information
- * about if it's the last frame and/or if it's a Bonus Frame and/or if it's a
- * fault
+ * about if it's the last frame, if it's a Bonus Frame and if it's a fault
  */
 public class Frame {
 
